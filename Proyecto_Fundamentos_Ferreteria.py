@@ -63,3 +63,37 @@ def formato_moneda(cantidad_dinero):
     # moneda, por ejemplo 1250 -> "$1,250.00".
     return f"${cantidad_dinero:,.2f}"  # :,.2f agrega comas de miles y 2 decimales
 
+
+# ==============================================================================
+# RF10. CARGAR INVENTARIO AL INICIAR (lectura de archivos + excepciones)
+# ==============================================================================
+
+def cargar_inventario():
+    # Función que regresa valor: lee el archivo CSV y regresa un diccionario
+    # con la forma {nombre: [precio, cantidad]}.
+    inventario_cargado = {}  # Diccionario vacío donde se guardarán los productos
+    try:  # Intentamos abrir el archivo (puede no existir la primera vez)
+        with open(ARCHIVO_INVENTARIO, "r", encoding="utf-8") as archivo_lectura:  # Abre en modo lectura
+            lineas_archivo = archivo_lectura.readlines()  # Lee todas las líneas en una lista
+        for numero_linea in range(1, len(lineas_archivo)):  # Empieza en 1 para saltar el encabezado
+            linea_limpia = lineas_archivo[numero_linea].strip()  # Quita el salto de línea
+            if linea_limpia == "":  # Si la línea está vacía
+                continue  # Se ignora y pasa a la siguiente
+            try:  # Cada línea se valida por separado para no perder todo el archivo
+                partes_linea = linea_limpia.split(",")  # Separa por comas: nombre, precio, cantidad
+                nombre_producto = partes_linea[0].strip().lower()  # Primer dato: nombre
+                precio_producto = float(partes_linea[1])  # Segundo dato: precio (decimal)
+                cantidad_producto = int(partes_linea[2])  # Tercer dato: cantidad (entero)
+                datos_producto = [precio_producto, cantidad_producto]  # Lista [precio, cantidad]
+                inventario_cargado[nombre_producto] = datos_producto  # Se agrega al diccionario
+            except (ValueError, IndexError):  # Línea con datos incompletos o no numéricos
+                print(f"  Aviso: la línea {numero_linea + 1} tiene un error y se omitió.")  # Aviso
+        total_cargados = len(inventario_cargado)  # Cuántos productos se cargaron
+        print(f"Inventario cargado correctamente: {total_cargados} producto(s).")  # RF10 salida
+    except FileNotFoundError:  # Primera vez que se usa el programa: no hay archivo
+        print("No se encontró inventario previo. Se inició un inventario nuevo.")  # RF10 salida
+    except PermissionError:  # El archivo existe pero no se puede leer (por ejemplo, abierto en Excel)
+        print("No se pudo leer el inventario (¿abierto en Excel?). Se inicia vacío.")  # Aviso
+    return inventario_cargado  # Regresa el diccionario (con datos o vacío)
+
+
