@@ -176,3 +176,26 @@ def agregar_producto(inventario_actual):
     print(f"Producto agregado: {nombre_producto.title()}")  # Confirmación: nombre
     print(f"  Precio: {formato_moneda(precio_producto)}")  # Confirmación: precio
     print(f"  Cantidad: {cantidad_producto}")  # Confirmación: cantidad
+
+
+# ==============================================================================
+# RF3. CONSULTAR INVENTARIO COMPLETO
+# ==============================================================================
+
+def consultar_inventario(inventario_actual):
+    # Función que no regresa valor: muestra todos los productos en forma de tabla.
+    print("\n--- INVENTARIO COMPLETO ---")  # Título de la sección
+    if len(inventario_actual) == 0:  # Si no hay productos registrados
+        print("El inventario está vacío.")  # Mensaje informativo
+        return  # Termina la función
+    nombres_ordenados = list(inventario_actual.keys())  # Lista con los nombres de los productos
+    nombres_ordenados.sort()  # Ordena alfabéticamente para que sea más legible
+    print(f"{'PRODUCTO':<25}{'PRECIO':>15}{'CANTIDAD':>12}")  # Encabezado de la tabla
+    print(LINEA_SEPARADORA)  # Separador
+    for nombre_producto in nombres_ordenados:  # Recorre cada producto en orden
+        precio_producto = inventario_actual[nombre_producto][0]  # Precio del producto
+        cantidad_producto = inventario_actual[nombre_producto][1]  # Cantidad del producto
+        texto_precio = formato_moneda(precio_producto)  # Precio con formato $
+        print(f"{nombre_producto.title():<25}{texto_precio:>15}{cantidad_producto:>12}")  # Fila
+    print(LINEA_SEPARADORA)  # Separador final
+    print(f"Total de productos registrados: {len(inventario_actual)}")  # Resumen
