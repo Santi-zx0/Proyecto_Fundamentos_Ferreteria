@@ -139,3 +139,20 @@ def registrar_venta_en_archivo(venta_realizada):
     except OSError:  # Error al escribir (permisos, archivo abierto, etc.)
         print("  Aviso: la venta se registró, pero no se respaldó en ventas.csv.")  # Aviso sin detener
 
+
+# ==============================================================================
+# RF1. MENÚ PRINCIPAL (función que no regresa valor)
+# ==============================================================================
+
+def mostrar_menu():
+    # Imprime las 8 opciones del sistema.
+    opciones_menu = ("Agregar producto", "Consultar inventario",  # Tupla: las opciones
+                     "Buscar producto", "Vender producto",  # no cambian durante
+                     "Reporte de stock bajo", "Ver ventas del día",  # la ejecución
+                     "Ver total vendido en el día", "Salir")  # Opción 8: Salir
+    print("\n" + LINEA_SEPARADORA)  # Línea superior
+    print("        FERRETERÍA - SISTEMA DE INVENTARIO Y VENTAS")  # Título del menú
+    print(LINEA_SEPARADORA)  # Línea inferior del título
+    for numero_opcion in range(len(opciones_menu)):  # Recorre la tupla por posición
+        print(f"  {numero_opcion + 1}. {opciones_menu[numero_opcion]}")  # Muestra "1. Agregar producto", etc.
+    print(LINEA_SEPARADORA)  # Línea de cierre del menú
