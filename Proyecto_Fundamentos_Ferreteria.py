@@ -282,3 +282,25 @@ def reporte_stock_bajo(inventario_actual):
     for fila_producto in matriz_stock_bajo:  # Recorre cada fila de la matriz
         print(f"{fila_producto[0].title():<25}{fila_producto[1]:>12}")  # Columna 0: nombre, columna 1: cantidad
     print(f"Productos por reabastecer: {len(matriz_stock_bajo)}")  # Resumen
+
+
+# ==============================================================================
+# RF7. VER VENTAS DEL DÍA
+# ==============================================================================
+
+def ver_ventas_del_dia(ventas_del_dia):
+    # Función que no regresa valor: muestra las ventas en el orden en que ocurrieron.
+    print("\n--- VENTAS DEL DÍA ---")  # Título de la sección
+    if len(ventas_del_dia) == 0:  # Si todavía no hay ventas
+        print("Aún no se ha registrado ninguna venta en esta sesión.")  # Mensaje informativo
+        return  # Termina la función
+    print(f"{'#':<4}{'PRODUCTO':<22}{'CANT.':>7}{'P. UNIT.':>13}{'TOTAL':>14}")  # Encabezado
+    print(LINEA_SEPARADORA)  # Separador
+    numero_venta = 1  # Contador para numerar las ventas
+    for venta_realizada in ventas_del_dia:  # Recorre la lista de tuplas en orden
+        producto, cantidad, precio_unitario, total_venta = venta_realizada  # Desempaqueta la tupla
+        texto_precio = formato_moneda(precio_unitario)  # Precio unitario con formato $
+        texto_total = formato_moneda(total_venta)  # Total con formato $
+        print(f"{numero_venta:<4}{producto.title():<22}{cantidad:>7}"
+              f"{texto_precio:>13}{texto_total:>14}")  # Fila de la tabla
+        numero_venta += 1  # Incrementa el contador
