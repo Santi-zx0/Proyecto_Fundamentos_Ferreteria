@@ -324,3 +324,50 @@ def mostrar_total_vendido(ventas_del_dia):
     total_del_dia = calcular_total_vendido(ventas_del_dia)  # Calcula el total
     print(f"Total acumulado: {formato_moneda(total_del_dia)}")  # Ejemplo: $1,250.00
     print(f"Número de ventas: {len(ventas_del_dia)}")  # Dato adicional
+
+
+# ==============================================================================
+# PROGRAMA PRINCIPAL
+# ==============================================================================
+
+def main():
+    # Función principal: carga el inventario, muestra el menú en ciclo y
+    # guarda al salir.
+    print("Iniciando sistema de la ferretería...")  # Mensaje de bienvenida
+    inventario = cargar_inventario()  # RF10: carga el inventario desde el CSV
+    ventas_del_dia = []  # Lista vacía para las ventas de esta sesión (tuplas)
+    programa_activo = True  # Bandera booleana que controla el ciclo del menú
+    try:  # Protege el ciclo por si el usuario presiona Ctrl+C
+        while programa_activo:  # RF1: el menú se repite hasta elegir "Salir"
+            mostrar_menu()  # Muestra las 8 opciones
+            try:  # Intenta convertir la opción a entero
+                opcion_elegida = int(input("Elige una opción (1-8): "))  # Lee la opción
+            except ValueError:  # Si escribió letras o símbolos
+                print("Opción inválida. Debes escribir un número del 1 al 8.")  # Mensaje
+                continue  # Vuelve a mostrar el menú
+            if opcion_elegida == 1:  # Opción 1
+                agregar_producto(inventario)  # RF2
+            elif opcion_elegida == 2:  # Opción 2
+                consultar_inventario(inventario)  # RF3
+            elif opcion_elegida == 3:  # Opción 3
+                buscar_producto(inventario)  # RF5
+            elif opcion_elegida == 4:  # Opción 4
+                vender_producto(inventario, ventas_del_dia)  # RF4
+            elif opcion_elegida == 5:  # Opción 5
+                reporte_stock_bajo(inventario)  # RF6
+            elif opcion_elegida == 6:  # Opción 6
+                ver_ventas_del_dia(ventas_del_dia)  # RF7
+            elif opcion_elegida == 7:  # Opción 7
+                mostrar_total_vendido(ventas_del_dia)  # RF8
+            elif opcion_elegida == 8:  # Opción 8: Salir
+                guardar_inventario(inventario)  # RF9: guarda antes de terminar
+                programa_activo = False  # Cambia la bandera para romper el ciclo
+            else:  # Número fuera del rango 1-8
+                print("Esa opción no existe. Elige un número del 1 al 8.")  # Mensaje
+    except (KeyboardInterrupt, EOFError):  # El usuario cerró con Ctrl+C / Ctrl+D
+        print("\nSalida inesperada detectada. Guardando inventario...")  # Aviso
+        guardar_inventario(inventario)  # Guarda para no perder información
+    print("¡Gracias por usar el sistema de la ferretería! Hasta pronto.")  # Despedida
+
+
+main()  # Llamada a la función principal para iniciar el programa
