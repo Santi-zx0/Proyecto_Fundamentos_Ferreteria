@@ -199,3 +199,22 @@ def consultar_inventario(inventario_actual):
         print(f"{nombre_producto.title():<25}{texto_precio:>15}{cantidad_producto:>12}")  # Fila
     print(LINEA_SEPARADORA)  # Separador final
     print(f"Total de productos registrados: {len(inventario_actual)}")  # Resumen
+
+
+# ==============================================================================
+# RF5. BUSCAR PRODUCTO
+# ==============================================================================
+
+def buscar_producto(inventario_actual):
+    # Función que no regresa valor: busca un producto por nombre y muestra sus datos.
+    print("\n--- BUSCAR PRODUCTO ---")  # Título de la sección
+    nombre_buscado = leer_nombre_producto("Nombre del producto a buscar: ")  # Pide el nombre
+    try:  # Intentamos acceder directamente a la llave del diccionario
+        datos_producto = inventario_actual[nombre_buscado]  # Si no existe, lanza KeyError
+        print(f"Producto encontrado: {nombre_buscado.title()}")  # Nombre
+        print(f"  Precio unitario: {formato_moneda(datos_producto[0])}")  # Precio
+        print(f"  Existencia: {datos_producto[1]} unidad(es)")  # Cantidad
+        if datos_producto[1] <= LIMITE_STOCK_BAJO:  # Aviso adicional si está en stock bajo
+            print("  ¡Atención! Este producto está en STOCK BAJO.")  # Alerta
+    except KeyError:  # El producto no está en el inventario
+        print(f"No se encontró ningún producto llamado '{nombre_buscado.title()}'.")  # Mensaje amigable
