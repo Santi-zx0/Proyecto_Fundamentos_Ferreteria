@@ -218,3 +218,38 @@ def buscar_producto(inventario_actual):
             print("  ¡Atención! Este producto está en STOCK BAJO.")  # Alerta
     except KeyError:  # El producto no está en el inventario
         print(f"No se encontró ningún producto llamado '{nombre_buscado.title()}'.")  # Mensaje amigable
+
+
+# ==============================================================================
+# RF4. VENDER PRODUCTO
+# ==============================================================================
+
+def vender_producto(inventario_actual, ventas_del_dia):
+    # Función que no regresa valor: descuenta del inventario y agrega la venta
+    # (como tupla) a la lista de ventas del día.
+    print("\n--- VENDER PRODUCTO ---")  # Título de la sección
+    nombre_producto = leer_nombre_producto("Nombre del producto a vender: ")  # Pide el nombre
+    if nombre_producto not in inventario_actual:  # Verifica que el producto exista
+        print(f"ERROR: '{nombre_producto.title()}' no existe. Venta cancelada.")  # Mensaje de error
+        return  # Termina sin vender
+    cantidad_vender = leer_entero("Cantidad a vender: ", 1)  # Pide cantidad (> 0, o sea >= 1)
+    precio_unitario = inventario_actual[nombre_producto][0]  # Obtiene el precio actual
+    stock_disponible = inventario_actual[nombre_producto][1]  # Obtiene el stock actual
+    if cantidad_vender > stock_disponible:  # Regla de negocio: no vender más de lo que hay
+        print(f"ERROR: stock insuficiente. Solo hay {stock_disponible} unidad(es).")  # Mensaje claro
+        print("Venta cancelada.")  # El programa sigue funcionando
+        return  # Termina sin vender
+    inventario_actual[nombre_producto][1] = stock_disponible - cantidad_vender  # Descuenta del inventario
+    total_venta = round(precio_unitario * cantidad_vender, 2)  # Calcula el total (precio × cantidad) redondeado a 2 decimales
+    venta_realizada = (nombre_producto, cantidad_vender,  # Tupla de la venta:
+                       precio_unitario, total_venta)  # (producto, cantidad, precio, total)
+    ventas_del_dia.append(venta_realizada)  # Agrega la venta al registro del día
+    registrar_venta_en_archivo(venta_realizada)  # Respaldo en ventas.csv
+    print("Venta registrada con éxito:")  # Confirmación
+    print(f"  Producto: {nombre_producto.title()}")  # Producto vendido
+    print(f"  Cantidad: {cantidad_vender}")  # Cantidad vendida
+    print(f"  Precio unitario: {formato_moneda(precio_unitario)}")  # Precio unitario
+    print(f"  Total: {formato_moneda(total_venta)}")  # Total de la venta
+    stock_restante = inventario_actual[nombre_producto][1]  # Stock después de la venta
+    if stock_restante <= LIMITE_STOCK_BAJO:  # Aviso si quedó en stock bajo
+        print(f"  Aviso: quedan {stock_restante} unidad(es) (stock bajo).")  # Alerta
