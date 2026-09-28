@@ -253,3 +253,32 @@ def vender_producto(inventario_actual, ventas_del_dia):
     stock_restante = inventario_actual[nombre_producto][1]  # Stock después de la venta
     if stock_restante <= LIMITE_STOCK_BAJO:  # Aviso si quedó en stock bajo
         print(f"  Aviso: quedan {stock_restante} unidad(es) (stock bajo).")  # Alerta
+
+
+# ==============================================================================
+# RF6. REPORTE DE STOCK BAJO
+# ==============================================================================
+
+def obtener_stock_bajo(inventario_actual):
+    # Función que regresa valor: filtra el inventario y regresa una lista de
+    # listas (matriz) con [nombre, cantidad] de productos con stock <= 5.
+    matriz_stock_bajo = []  # Lista vacía que se llenará con los productos filtrados
+    for nombre_producto in inventario_actual:  # Recorre todo el inventario
+        cantidad_producto = inventario_actual[nombre_producto][1]  # Cantidad del producto
+        if cantidad_producto <= LIMITE_STOCK_BAJO:  # Condición de stock bajo
+            matriz_stock_bajo.append([nombre_producto, cantidad_producto])  # Agrega una fila a la matriz
+    return matriz_stock_bajo  # Regresa la matriz resultante
+
+
+def reporte_stock_bajo(inventario_actual):
+    # Función que no regresa valor: imprime el reporte usando la matriz filtrada.
+    print(f"\n--- REPORTE DE STOCK BAJO ({LIMITE_STOCK_BAJO} unidades o menos) ---")  # Título
+    matriz_stock_bajo = obtener_stock_bajo(inventario_actual)  # Obtiene la lista filtrada
+    if len(matriz_stock_bajo) == 0:  # Si ningún producto cumple la condición
+        print("No hay productos en stock bajo. ¡Todo en orden!")  # Mensaje informativo
+        return  # Termina la función
+    print(f"{'PRODUCTO':<25}{'CANTIDAD':>12}")  # Encabezado de la tabla
+    print(LINEA_SEPARADORA)  # Separador
+    for fila_producto in matriz_stock_bajo:  # Recorre cada fila de la matriz
+        print(f"{fila_producto[0].title():<25}{fila_producto[1]:>12}")  # Columna 0: nombre, columna 1: cantidad
+    print(f"Productos por reabastecer: {len(matriz_stock_bajo)}")  # Resumen
