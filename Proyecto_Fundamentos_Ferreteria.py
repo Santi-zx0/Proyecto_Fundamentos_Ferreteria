@@ -304,3 +304,23 @@ def ver_ventas_del_dia(ventas_del_dia):
         print(f"{numero_venta:<4}{producto.title():<22}{cantidad:>7}"
               f"{texto_precio:>13}{texto_total:>14}")  # Fila de la tabla
         numero_venta += 1  # Incrementa el contador
+
+
+# ==============================================================================
+# RF8. TOTAL VENDIDO EN EL DÍA
+# ==============================================================================
+
+def calcular_total_vendido(ventas_del_dia):
+    # Función que regresa valor: suma el total de todas las ventas (acumulador).
+    total_acumulado = 0.0  # Acumulador que inicia en cero
+    for venta_realizada in ventas_del_dia:  # Recorre cada venta
+        total_acumulado += venta_realizada[3]  # La posición 3 de la tupla es el total
+    return total_acumulado  # Regresa la suma
+
+
+def mostrar_total_vendido(ventas_del_dia):
+    # Función que no regresa valor: muestra el total en formato de moneda.
+    print("\n--- TOTAL VENDIDO EN EL DÍA ---")  # Título de la sección
+    total_del_dia = calcular_total_vendido(ventas_del_dia)  # Calcula el total
+    print(f"Total acumulado: {formato_moneda(total_del_dia)}")  # Ejemplo: $1,250.00
+    print(f"Número de ventas: {len(ventas_del_dia)}")  # Dato adicional
