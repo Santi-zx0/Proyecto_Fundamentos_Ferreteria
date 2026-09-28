@@ -97,3 +97,45 @@ def cargar_inventario():
     return inventario_cargado  # Regresa el diccionario (con datos o vacío)
 
 
+# ==============================================================================
+# RF9. GUARDAR INVENTARIO AL SALIR (escritura de archivos + excepciones)
+# ==============================================================================
+
+def guardar_inventario(inventario_actual):
+    # Función que regresa valor: escribe el inventario en el CSV y regresa
+    # True si se guardó bien o False si hubo un problema.
+    try:  # Intentamos escribir el archivo
+        with open(ARCHIVO_INVENTARIO, "w", encoding="utf-8") as archivo_escritura:  # "w" sobrescribe el archivo
+            archivo_escritura.write(ENCABEZADO_INVENTARIO + "\n")  # Primero se escribe el encabezado
+            for nombre_producto in inventario_actual:  # Recorre cada producto del diccionario
+                precio_producto = inventario_actual[nombre_producto][0]  # Obtiene el precio
+                cantidad_producto = inventario_actual[nombre_producto][1]  # Obtiene la cantidad
+                linea_csv = f"{nombre_producto},{precio_producto},{cantidad_producto}\n"  # Arma la fila
+                archivo_escritura.write(linea_csv)  # Escribe la fila en el archivo
+        print(f"Inventario guardado correctamente en '{ARCHIVO_INVENTARIO}'.")  # RF9 salida
+        return True  # Se guardó sin problemas
+    except PermissionError:  # El archivo está abierto en otro programa (por ejemplo, Excel)
+        print("ERROR: no se pudo guardar. Cierra el archivo en Excel.")  # Aviso
+    except OSError:  # Cualquier otro problema del sistema de archivos
+        print("ERROR: ocurrió un problema al escribir el archivo de inventario.")  # Aviso
+    return False  # Si llegó aquí, hubo un error
+
+
+def registrar_venta_en_archivo(venta_realizada):
+    # Función que no regresa valor: agrega (modo "a") una venta al historial
+    # ventas.csv para que quede un respaldo permanente de cada venta.
+    try:  # Intentamos revisar si el archivo ya existe
+        with open(ARCHIVO_VENTAS, "r", encoding="utf-8"):  # Solo lo abrimos para comprobar que existe
+            archivo_existe = True  # Si se pudo abrir, ya existe
+    except FileNotFoundError:  # No existe todavía
+        archivo_existe = False  # Habrá que escribir el encabezado
+    try:  # Intentamos agregar la venta al final del archivo
+        with open(ARCHIVO_VENTAS, "a", encoding="utf-8") as archivo_ventas:  # "a" agrega sin borrar
+            if not archivo_existe:  # Si es un archivo nuevo
+                archivo_ventas.write(ENCABEZADO_VENTAS + "\n")  # Escribe el encabezado
+            producto, cantidad, precio_unitario, total_venta = venta_realizada  # Desempaqueta la tupla
+            linea_csv = f"{producto},{cantidad},{precio_unitario},{total_venta}\n"  # Arma la fila
+            archivo_ventas.write(linea_csv)  # Escribe la venta
+    except OSError:  # Error al escribir (permisos, archivo abierto, etc.)
+        print("  Aviso: la venta se registró, pero no se respaldó en ventas.csv.")  # Aviso sin detener
+
