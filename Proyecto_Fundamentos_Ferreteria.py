@@ -156,3 +156,23 @@ def mostrar_menu():
     for numero_opcion in range(len(opciones_menu)):  # Recorre la tupla por posición
         print(f"  {numero_opcion + 1}. {opciones_menu[numero_opcion]}")  # Muestra "1. Agregar producto", etc.
     print(LINEA_SEPARADORA)  # Línea de cierre del menú
+
+
+# ==============================================================================
+# RF2. AGREGAR PRODUCTO NUEVO
+# ==============================================================================
+
+def agregar_producto(inventario_actual):
+    # Función que no regresa valor: agrega un producto al diccionario
+    # (los diccionarios se modifican directamente dentro de la función).
+    print("\n--- AGREGAR PRODUCTO ---")  # Título de la sección
+    nombre_producto = leer_nombre_producto("Nombre del producto: ")  # Pide el nombre
+    if nombre_producto in inventario_actual:  # Revisa si ya existe (no se duplica)
+        print(f"El producto '{nombre_producto.title()}' ya existe. No se agregó.")  # Aviso
+        return  # Termina la función sin agregar
+    precio_producto = leer_decimal_positivo("Precio unitario: $")  # Pide precio (> 0)
+    cantidad_producto = leer_entero("Cantidad inicial en stock: ", 0)  # Pide cantidad (>= 0)
+    inventario_actual[nombre_producto] = [precio_producto, cantidad_producto]  # Guarda el producto
+    print(f"Producto agregado: {nombre_producto.title()}")  # Confirmación: nombre
+    print(f"  Precio: {formato_moneda(precio_producto)}")  # Confirmación: precio
+    print(f"  Cantidad: {cantidad_producto}")  # Confirmación: cantidad
